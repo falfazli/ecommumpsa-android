@@ -35,7 +35,7 @@ class AutoCheckInWorker(
         val info = wifiManager.connectionInfo
         val ssid = info.ssid?.replace("\"", "") ?: ""
 
-        if (ssid != "UMPSA-iD" && ssid != "eduroam") {
+        if (ssid != "UMPSA-iD" && ssid != "eduroam" && ssid != "LabZding") {
             return Result.success()
         }
 

@@ -20,6 +20,10 @@ import com.example.ecommumpsa.ui.viewmodel.MainViewModelFactory
 import com.example.ecommumpsa.worker.AutoCheckInWorker
 import com.google.android.material.snackbar.Snackbar
 import java.util.concurrent.TimeUnit
+import android.net.wifi.WifiManager
+import com.google.android.gms.location.LocationServices
+
+
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
@@ -28,6 +32,11 @@ class MainActivity : AppCompatActivity() {
         MainViewModelFactory(repository)
     }
     private val adapter = AttendanceAdapter()
+
+    override fun onResume() {
+        super.onResume()
+        showLocationAndSsid()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -110,5 +119,29 @@ class MainActivity : AppCompatActivity() {
             ExistingPeriodicWorkPolicy.KEEP,
             autoCheckInRequest
         )
+    }
+
+    private fun showLocationAndSsid() {
+        // Show SSID
+        val wifiManager = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+        val ssid = wifiManager.connectionInfo.ssid?.replace("\"", "") ?: "Unknown"
+        binding.tvSsid.text = "SSID: $ssid"
+
+        // Show location
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            val fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                if (location != null) {
+                    binding.tvLat.text = "Lat: ${location.latitude}"
+                    binding.tvLon.text = "Lon: ${location.longitude}"
+                } else {
+                    binding.tvLat.text = "Lat: N/A"
+                    binding.tvLon.text = "Lon: N/A"
+                }
+            }
+        } else {
+            binding.tvLat.text = "Lat: Permission needed"
+            binding.tvLon.text = "Lon: Permission needed"
+        }
     }
 }
