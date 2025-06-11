@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">EcommUMPSA</string>
+    <string name="login">Login</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="check_in">Check In</string>
+    <string name="check_out">Check Out</string>
+    <string name="attendance">Attendance</string>
+    <string name="settings">Settings</string>
+    <string name="logout">Logout</string>
+    <string name="loading">Loading...</string>
+    <string name="auto_checkin_channel">Auto Check-In</string>
+</resources>
