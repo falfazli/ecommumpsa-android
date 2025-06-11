@@ -1,6 +1,7 @@
 package com.example.ecommumpsa.data
 
 import android.content.Context
+import android.util.Log
 import com.example.ecommumpsa.data.model.Attendance
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -21,6 +22,7 @@ class EcommRepository(context: Context) {
             client.newCall(Request.Builder().url("https://ecomm.ump.edu.my").get().build()).execute().close()
 
             val url = "https://ecomm.ump.edu.my/Login"
+            Log.d("AttendanceAPI", "Login URL: $url")
             val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.US)
             val yesterday = sdf.format(Date(System.currentTimeMillis() - 86400000L))
             val formBody = FormBody.Builder()
@@ -54,6 +56,7 @@ class EcommRepository(context: Context) {
             val username = sessionManager.getUsername() ?: return@withContext Result.failure(Exception("No user"))
             val password = sessionManager.getPassword() ?: return@withContext Result.failure(Exception("No password"))
             val url = "https://ecomm.ump.edu.my/cms/StaffAttendance/checkatt2.jsp"
+            Log.d("AttendanceAPI", "Attendance action URL: $url, action: $action, username: $username")
             val formBody = FormBody.Builder()
                 .add("action", action)
                 .add("username", username)
@@ -75,6 +78,7 @@ class EcommRepository(context: Context) {
     suspend fun getAttendance(): Result<List<Attendance>> = withContext(Dispatchers.IO) {
         try {
             val url = "https://ecomm.ump.edu.my/staffAttendance.jsp"
+            Log.d("AttendanceAPI", "Get attendance URL: $url")
             val req = Request.Builder().url(url).get().build()
             client.newCall(req).execute().use { resp ->
                 val html = resp.body?.string() ?: ""
