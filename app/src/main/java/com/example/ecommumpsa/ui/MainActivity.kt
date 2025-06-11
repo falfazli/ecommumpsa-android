@@ -73,6 +73,7 @@ class MainActivity : AppCompatActivity() {
         }
         viewModel.status.observe(this) {
             if (it.isNotEmpty()) {
+                binding.tvDebug.text = it
                 Snackbar.make(binding.coordinatorLayout, it, Snackbar.LENGTH_LONG).show()
             }
         }
